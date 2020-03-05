@@ -1,0 +1,33 @@
+import bpy
+
+bpy.ops.object.select_all(action="SELECT")
+bpy.ops.object.delete()
+
+number=40
+x,y,z=0,0,0
+n=number-20
+
+for i in range(0,n):
+    bpy.ops.mesh.primitive_cube_add(location=(x,y,z))
+    bpy.ops.transform.resize(value=((2*number+1)-2*i, (2*number+1)-2*i, 2))
+    z+=4
+    
+z+=5   
+
+for i in range(0,4):
+    if(i==0):
+        x,y=15,15
+    elif(i==1):
+        x,y=-15,15
+    elif(i==2):
+        x,y=-15,-15
+    elif(i==3):
+        x,y=15,-15
+        
+    bpy.ops.mesh.primitive_cube_add(location=(x,y,z))
+    bpy.ops.transform.resize(value=(4,4,10))
+
+x,y=0,0
+z+=11
+bpy.ops.mesh.primitive_cube_add(location=(x,y,z))
+bpy.ops.transform.resize(value=(20, 20, 2))
