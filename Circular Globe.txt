@@ -1,0 +1,57 @@
+import bpy
+import math as m
+
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+latitude_div=32
+longitude_div=7
+r=latitude_div/4
+size=6*(r/latitude_div)
+z=0
+r1 = r
+
+#Central Ring
+for i in range(latitude_div):
+        angle = 2*i*m.pi/latitude_div
+        x = r*m.cos(angle)
+        y = r*m.sin(angle)
+        bpy.ops.mesh.primitive_cube_add(size=size, location=(x, y, z))
+        bpy.context.object.rotation_euler[2] = angle
+
+#Upper Rings
+for j in range(1, longitude_div+1):
+    angle1 = 0.5*j*m.pi/longitude_div
+    z = r*m.cos(angle1)
+    y1 = r*m.sin(angle1)
+    r1 = y1
+    s=j*size/longitude_div
+    for i in range(latitude_div):
+        angle = 2*i*m.pi/latitude_div
+        x = r1*m.cos(angle)
+        y = r1*m.sin(angle)
+        bpy.ops.mesh.primitive_cube_add(size=s, location=(x, y, z))
+        bpy.context.object.rotation_euler[1] = angle1
+        bpy.context.object.rotation_euler[2] = angle
+    
+#Lower Rings
+for j in range(1, longitude_div+1):
+    angle1 = 0.5*j*m.pi/longitude_div
+    z = -r*m.cos(angle1)
+    y1 = r*m.sin(angle1)
+    r1 = y1
+    s=j*size/longitude_div
+    for i in range(latitude_div):
+        angle = 2*i*m.pi/latitude_div
+        x = r1*m.cos(angle)
+        y = r1*m.sin(angle)
+        bpy.ops.mesh.primitive_cube_add(size=s, location=(x, y, z))
+        bpy.context.object.rotation_euler[1] = -angle1
+        bpy.context.object.rotation_euler[2] = angle
+        
+#Adding Light
+bpy.ops.object.light_add(type='POINT', radius=1, location=(0, 0, 0))
+#Intensity 9MW
+bpy.context.object.data.energy = 9e+06
+#Color for Flamy Look
+bpy.context.object.data.color = (1, 0.153448, 0)
